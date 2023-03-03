@@ -1,5 +1,3 @@
-from typing import Union
-# from app.get_cities import get_cities
 from app.get_data_from_csv import root
 from fastapi import FastAPI, HTTPException
 import json
@@ -26,4 +24,4 @@ async def read_root(county_code: str, rate: int, living_space: int):
                 })
             return output
         if i == len(data_json) - 1:
-            return HTTPException(status_code=404, detail="Item not found")
+            raise HTTPException(status_code=404, detail="Item not found")

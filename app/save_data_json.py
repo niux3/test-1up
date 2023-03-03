@@ -1,12 +1,11 @@
-from get_cities import get_cities, get_zipcode
-from get_data_from_csv import root, get_county, get_rent
+from get_cities import get_zipcode
+from get_data_from_csv import root, get_rent
 from requests import get
 from bs4 import BeautifulSoup
 from slugify import slugify
 from collections import namedtuple
 import json
 import os
-from pprint import pprint
 
 
 def get_county_list_from_http():
@@ -14,10 +13,8 @@ def get_county_list_from_http():
     r = get('https://www.bien-dans-ma-ville.fr/departements/')
     if r.status_code == 200:
         soup = BeautifulSoup(r.text, 'html.parser')
-        header = soup.select('#liste table th')
         tds = soup.select('#liste table td')
         for td in tds:
-            row_data = []
             if td.find('a') is not None:
                 href = td.find('a')['href']
                 r = get(href)

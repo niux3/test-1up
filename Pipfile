@@ -11,6 +11,8 @@ beautifulsoup4 = "*"
 requests = "*"
 python-slugify = "*"
 unicodecsv = "*"
+pylint = "*"
+flake8 = "*"
 
 [dev-packages]
 
