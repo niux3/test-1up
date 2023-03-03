@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from slugify import slugify
 from collections import namedtuple
-from app.get_data_from_csv import get_county, get_average_rent
+from get_data_from_csv import get_county, get_rent
 
 
 def get_zipcode(url):
@@ -34,7 +34,7 @@ def get_cities(county_number, rate=1, living_space=0):
                     city = cell.string
                     zipcode = get_zipcode(cell.find('a')['href'])
                     row.append(zipcode)
-                    row.append(get_average_rent(city, rate, living_space))
+                    row.append(get_rent(city, rate, living_space))
                     row.append(city)
                 elif i % len_fields == len_fields - 1:
                     row.append(cell.string)

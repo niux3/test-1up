@@ -6,13 +6,16 @@ import csv
 root = os.path.abspath(os.path.dirname(__file__))
 
 
-def get_average_rent(city_name, rate, living_space):
-    """calcule le loyer moyen"""
+def get_rent(city_name):
+    """"""
     with open(os.path.join(root, 'data', 'appartements.csv')) as csv_file:
-        data = int([row['loypredm2'] for row in csv.DictReader(csv_file) if row['LIBGEO'] == city_name].pop())
-        # calcul bidon en carton
-        result = data * (living_space / rate)
-        return result
+        try:
+            data = int([row['loypredm2'] for row in csv.DictReader(csv_file) if row['LIBGEO'] == city_name].pop())
+            # calcul bidon en carton
+            # result = data * (living_space / rate)
+            return data
+        except:
+            return 42
 
 
 def get_county(number):
