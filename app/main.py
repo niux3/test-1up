@@ -4,7 +4,7 @@ fichier d'execution fastapi
 import json
 import os
 from fastapi import FastAPI, HTTPException
-from app.get_data_from_csv import root
+from app.save_data_json import root
 
 
 app = FastAPI()

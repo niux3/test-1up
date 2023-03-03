@@ -3,12 +3,38 @@ save json file
 """
 import json
 import os
+import csv
 from collections import namedtuple
-from get_cities import get_zipcode
-from get_data_from_csv import root, get_rent
 from requests import get
 from bs4 import BeautifulSoup
 from slugify import slugify
+
+
+root = os.path.abspath(os.path.dirname(__file__))
+
+
+def get_rent(city_name):
+    """get rent from csv file"""
+    path = os.path.join(root, 'data', 'appartements.csv')
+    with open(path, encoding="utf-8") as csv_file:
+        try:
+            filtered_city = [
+                row['loypredm2']
+                for row in csv.DictReader(csv_file)
+                if row['LIBGEO'] == city_name
+            ]
+            data = int(filtered_city.pop())
+            return data
+        except Exception:
+            return 42
+
+
+def get_zipcode(url):
+    """retourne le code postal"""
+    req = get(url)
+    if req.status_code == 200:
+        soup = BeautifulSoup(req.text, 'html.parser')
+        return soup.select('h1 small').pop().string
 
 
 def get_county_list_from_http():
@@ -41,20 +67,20 @@ def get_county_list_from_http():
                     for i, cell in enumerate(data):
                         if i % len_fields == 0:
                             row = []
-                            city = cell.string
+                            city_name = cell.string
                             zip_code = get_zipcode(cell.find('a')['href'])
                             params_print = [
                                 '> ',
                                 county_code,
                                 ' > ',
-                                city,
+                                city_name,
                                 ' > ',
                                 zip_code
                             ]
                             print(*params_print)
                             row.append(zip_code)
-                            row.append(get_rent(city))
-                            row.append(city)
+                            row.append(get_rent(city_name))
+                            row.append(city_name)
                         elif i % len_fields == len_fields - 1:
                             row.append(cell.string)
                             output_cities.append(city_tuple(*row)._asdict())
@@ -66,9 +92,6 @@ def get_county_list_from_http():
                         "cities": output_cities
                     }
                 })
-                # if county_code == '01':
-                #     pprint(data_to_json, indent=2)
-                #     break
         save_data(data_to_json)
 
 
